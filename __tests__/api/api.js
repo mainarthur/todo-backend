@@ -159,3 +159,15 @@ describe("ToDos", function () {
             })
     })
 })
+
+describe("Auth", function() {
+    it(`POST ${link("auth/register")}`, function() {
+        return frisby.post(link("auth/register"), {
+            name: "Name", 
+            password: "Pass",
+            email: "e@ma.il"
+        })
+            .expect("status", 200)
+            .then(res => console.log(res.json))
+    })
+})
