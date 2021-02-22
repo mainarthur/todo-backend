@@ -59,10 +59,11 @@ describe("Auth", function () {
         })
     })
 
-    it(`POST ${link("auth/refresh-token")}`, () => {
-        const prevRefreshToken = refresh_token
-        const prevAccessToken = access_token
 
+    const prevRefreshToken = refresh_token
+    const prevAccessToken = access_token
+
+    it(`POST ${link("auth/refresh-token")}`, () => {
         return frisby.post(link("auth/refresh-token"), {
             refresh_token: refresh_token
         }).expect("status", 200)
@@ -74,9 +75,6 @@ describe("Auth", function () {
             access_token = res.json.access_token
             refresh_token = res.json.refresh_token
 
-            expect(refresh_token).toBe(prevRefreshToken)
-            expect(access_token).toBe(prevAccessToken)
-
             frisby.globalSetup({
                 request: {
                     headers: {
@@ -85,6 +83,12 @@ describe("Auth", function () {
                 }
             })
         })
+
+    })
+
+    it("Access token and refresh token changed", () => {
+        expect(access_token).not.toBe(prevAccessToken)
+        expect(refresh_token).not.toBe(prevRefreshToken)
     })
 
 
