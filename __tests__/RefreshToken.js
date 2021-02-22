@@ -27,6 +27,10 @@ describe("RefreshToken", function () {
         expect(token.update).toBeDefined()
     })
 
+    it("has userId field", () => {
+        expect(token.userId).toBeDefined()
+    })
+
     it("toString and token are similar", () => {
         expect(token.token).toBe(token.toString())
         expect(token.token).toBe(token + "")

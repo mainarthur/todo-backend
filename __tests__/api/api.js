@@ -58,6 +58,8 @@ describe("Auth", function () {
         })
     })
 
+    it(`POST ${link("auth/refresh-token")}`)
+
 
 })
 
