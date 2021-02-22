@@ -15,7 +15,6 @@ describe("RefreshToken", function () {
         expect(token.revoked).toBeDefined()
     })
 
-
     it("has revoke field", () => {
         expect(token.revoke).toBeDefined()
     })
@@ -33,7 +32,27 @@ describe("RefreshToken", function () {
         expect(token.token).toBe(token + "")
     })
 
-    it("not expired", () => {
+    it("is not expired", () => {
         expect(token.isExpired()).toBeFalsy()
+    })
+
+    it("is not revoked", () => {
+        expect(token.revoked).toBeFalsy()
+    })
+
+    let prevToken = token.token
+    let prevExpireDate = token.expiresAt
+
+    it("is updated", () => {
+        token.update()
+        expect(token.token).not.toBe(prevToken)
+        expect(token.expiresAt).not.toBe(prevExpireDate)
+    })
+
+
+    it("is revoked", () => {
+        token.revoke()
+        expect(token.isExpired()).toBeTruthy()
+        expect(token.revoked).toBeTruthy()
     })
 })
