@@ -3,13 +3,72 @@ const { Joi } = frisby
 
 const link = (endpoint) => `http://api.todolist.local/${endpoint}`
 
+let access_token, refresh_token;
+
+describe("Auth", function () {
+
+    const user = {
+        password: Array(30).fill("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz{}*()!@#$%^&*_-+=").map((x) => { 
+            return x[Math.floor(Math.random() * x.length)]
+        }).join(''),
+        name: "username",
+        email: `${Array(30).fill("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz").map((x) => { 
+            return x[Math.floor(Math.random() * x.length)]
+        }).join('')}@email.com`
+    }
+    
+
+
+    it(`POST ${link("auth/register")}`, function () {
+        return frisby.post(link("auth/register"), user).expect("jsonTypesStrict", {
+            status: Joi.boolean(),
+            access_token: Joi.string(),
+            refresh_token: Joi.string()
+        }).then(res => {
+            access_token = res.json.access_token
+            refresh_token = res.json.refresh_token
+
+            frisby.globalSetup({
+                request: {
+                    headers: {
+                        "Authorization": `Bearer ${access_token}`
+                    }
+                }
+            })
+        })
+    })
+
+    
+    it(`POST ${link("auth/login")}`, function () {
+        return frisby.post(link("auth/login"), user).expect("jsonTypesStrict", {
+            status: Joi.boolean(),
+            access_token: Joi.string(),
+            refresh_token: Joi.string()
+        }).then(res => {
+            access_token = res.json.access_token
+            refresh_token = res.json.refresh_token
+
+            frisby.globalSetup({
+                request: {
+                    headers: {
+                        "Authorization": `Bearer ${access_token}`
+                    }
+                }
+            })
+        })
+    })
+
+
+})
 
 describe("ToDos", function () {
+
+
     it(`GET ${link("todo/all")}`, function () {
         return frisby.get(link("todo/all"))
             .expect("status", 200)
             .expect('header', 'Content-Type', 'application/json')
-            .expect("jsonTypes", {
+            .expect("jsonTypesStrict", {
                 status: Joi.boolean(),
                 results: Joi.array()
             })
@@ -39,7 +98,7 @@ describe("ToDos", function () {
                 return frisby.get(link("todo/all"))
                     .expect("status", 200)
                     .expect('header', 'Content-Type', 'application/json')
-                    .expect("jsonTypes", {
+                    .expect("jsonTypesStrict", {
                         status: Joi.boolean(),
                         results: Joi.array()
                     }).then((todos) => {
@@ -65,7 +124,7 @@ describe("ToDos", function () {
             })
     })
 
-    it(`DELETE ${link("todo")}`, function() {
+    it(`DELETE ${link("todo")}`, function () {
         return frisby.post(link("todo"), {
             text: "new todo"
         })
@@ -78,7 +137,7 @@ describe("ToDos", function () {
                 return frisby.get(link("todo/all"))
                     .expect("status", 200)
                     .expect('header', 'Content-Type', 'application/json')
-                    .expect("jsonTypes", {
+                    .expect("jsonTypesStrict", {
                         status: Joi.boolean(),
                         results: Joi.array()
                     }).then((todos) => {
@@ -95,21 +154,21 @@ describe("ToDos", function () {
                                 expect(deletedToDoId).toEqual(id)
 
                                 return frisby.get(link("todo/all"))
-                                .expect("status", 200)
-                                .expect('header', 'Content-Type', 'application/json')
-                                .expect("jsonTypes", {
-                                    status: Joi.boolean(),
-                                    results: Joi.array()
-                                }).then((todos) => {
-                                    expect(todos.json.results.find((todo) => todo.id == id)).toBeUndefined()
-                                })
+                                    .expect("status", 200)
+                                    .expect('header', 'Content-Type', 'application/json')
+                                    .expect("jsonTypesStrict", {
+                                        status: Joi.boolean(),
+                                        results: Joi.array()
+                                    }).then((todos) => {
+                                        expect(todos.json.results.find((todo) => todo.id == id)).toBeUndefined()
+                                    })
                             })
 
                     })
             })
     })
 
-    it(`PATCH ${link("todo")}`, function() {
+    it(`PATCH ${link("todo")}`, function () {
         return frisby.post(link("todo"), {
             text: "new todo"
         })
@@ -122,7 +181,7 @@ describe("ToDos", function () {
                 return frisby.get(link("todo/all"))
                     .expect("status", 200)
                     .expect('header', 'Content-Type', 'application/json')
-                    .expect("jsonTypes", {
+                    .expect("jsonTypesStrict", {
                         status: Joi.boolean(),
                         results: Joi.array()
                     }).then((todos) => {
@@ -145,29 +204,17 @@ describe("ToDos", function () {
                                 expect(updatedToDoId).toEqual(id)
 
                                 return frisby.get(link("todo/all"))
-                                .expect("status", 200)
-                                .expect('header', 'Content-Type', 'application/json')
-                                .expect("jsonTypes", {
-                                    status: Joi.boolean(),
-                                    results: Joi.array()
-                                }).then((todos) => {
-                                    expect(todos.json.results.find((todo) => todo.id == id && todo.text == "updated text")).toBeDefined()
-                                })
+                                    .expect("status", 200)
+                                    .expect('header', 'Content-Type', 'application/json')
+                                    .expect("jsonTypesStrict", {
+                                        status: Joi.boolean(),
+                                        results: Joi.array()
+                                    }).then((todos) => {
+                                        expect(todos.json.results.find((todo) => todo.id == id && todo.text == "updated text")).toBeDefined()
+                                    })
                             })
 
                     })
             })
-    })
-})
-
-describe("Auth", function() {
-    it(`POST ${link("auth/register")}`, function() {
-        return frisby.post(link("auth/register"), {
-            name: "Name", 
-            password: "Pass",
-            email: "e@ma.il"
-        })
-            .expect("status", 200)
-            .then(res => console.log(res.json))
     })
 })
