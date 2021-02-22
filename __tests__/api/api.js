@@ -3,9 +3,10 @@ const { Joi } = frisby
 
 const link = (endpoint) => `http://api.todolist.local/${endpoint}`
 
-let access_token, refresh_token;
 
 describe("Auth", function () {
+
+    let access_token, refresh_token;
 
     const user = {
         password: Array(30).fill("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz{}*()!@#$%^&*_-+=").map((x) => { 
@@ -58,7 +59,33 @@ describe("Auth", function () {
         })
     })
 
-    it(`POST ${link("auth/refresh-token")}`)
+    it(`POST ${link("auth/refresh-token")}`, () => {
+        const prevRefreshToken = refresh_token
+        const prevAccessToken = access_token
+
+        return frisby.post(link("auth/refresh-token"), {
+            refresh_token: refresh_token
+        }).expect("status", 200)
+        .expect("jsonTypesStrict", {
+            status: Joi.boolean(),
+            access_token: Joi.string(),
+            refresh_token: Joi.string()
+        }).then(res => {
+            access_token = res.json.access_token
+            refresh_token = res.json.refresh_token
+
+            expect(refresh_token).toBe(prevRefreshToken)
+            expect(access_token).toBe(prevAccessToken)
+
+            frisby.globalSetup({
+                request: {
+                    headers: {
+                        "Authorization": `Bearer ${access_token}`
+                    }
+                }
+            })
+        })
+    })
 
 
 })
