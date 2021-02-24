@@ -6,6 +6,6 @@ interface User extends Document {
     passwordHash: string;
 }
 
-let user: Model<User>;
+declare let user: Model<User>;
 
 export = user;
