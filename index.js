@@ -6,12 +6,15 @@ import router from "./lib/routes"
 import logger from "./lib/middlewares/logger"
 import jwtError from "./lib/middlewares/jwt-error"
 import cors from "@koa/cors"
+import mongoose from "mongoose"
 
 dotenv.config()
 
 const {
     HOSTNAME,
-    PORT
+    PORT,
+    MONGODB_URI,
+    NODE_ENV
 } = process.env
 
 const app = new Koa()
@@ -23,9 +26,24 @@ app.use(logger)
 app.use(cors())
 app.use(jwtError)
 app.use(router.routes())
-app.use(router.allowedMethods())
+app.use(router.allowedMethods());
 
-// @ts-ignore
-app.listen(PORT, HOSTNAME, () => {
-    console.log(`Server is running on ${HOSTNAME}:${PORT}`)
-})
+
+
+(async () => {
+    try {
+        await mongoose.connect(MONGODB_URI, {
+            autoIndex: NODE_ENV != "production",
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        })
+        console.log("DB is connected")
+    } catch (err) {
+        console.log(err)
+        process.exit(1)
+    }
+    // @ts-ignore
+    app.listen(PORT, HOSTNAME, () => {
+        console.log(`Server is running on ${HOSTNAME}:${PORT}`)
+    })
+})()
