@@ -4,9 +4,11 @@ import Koa from "koa"
 import bodyParser from "koa-bodyparser"
 import router from "./lib/routes"
 import logger from "./lib/middlewares/logger"
-import jwtError from "./lib/middlewares/jwt-error"
+import errorsMiddleware from "./lib/middlewares/errorsMiddleware"
 import cors from "@koa/cors"
 import mongoose from "mongoose"
+
+import User from "./lib/models/User"
 
 dotenv.config()
 
@@ -24,7 +26,7 @@ app.use(bodyParser({
 }))
 app.use(logger)
 app.use(cors())
-app.use(jwtError)
+app.use(errorsMiddleware)
 app.use(router.routes())
 app.use(router.allowedMethods());
 
