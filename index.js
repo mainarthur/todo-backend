@@ -1,6 +1,11 @@
-import http from "http";
+//@ts-check
 import dotenv from "dotenv"
-import requestListener from"./lib/requestListener.js"
+import Koa from "koa"
+import bodyParser from "koa-bodyparser"
+import router from "./lib/routes"
+import logger from "./lib/middlewares/logger"
+import jwtError from "./lib/middlewares/jwt-error"
+import cors from "@koa/cors"
 
 dotenv.config()
 
@@ -9,8 +14,18 @@ const {
     PORT
 } = process.env
 
-const server = http.createServer(requestListener)
+const app = new Koa()
 
-server.listen(PORT, HOSTNAME, () => {
-    console.log(`Server is running on http://${HOSTNAME}:${PORT}`)
+app.use(bodyParser({
+    enableTypes: ["json"]
+}))
+app.use(logger)
+app.use(cors())
+app.use(jwtError)
+app.use(router.routes())
+app.use(router.allowedMethods())
+
+// @ts-ignore
+app.listen(PORT, HOSTNAME, () => {
+    console.log(`Server is running on ${HOSTNAME}:${PORT}`)
 })
