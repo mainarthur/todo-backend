@@ -1,4 +1,4 @@
-import { Document, Model } from 'mongoose'
+import { Document, Model, Schema } from 'mongoose'
 
 interface RefreshToken extends Document {
     userId: Schema.Types.ObjectId;
@@ -7,6 +7,6 @@ interface RefreshToken extends Document {
     token: String;
 }
 
-let refreshToken: Model<RefreshToken>;
+declare let refreshToken: Model<RefreshToken>;
 
 export = refreshToken;
