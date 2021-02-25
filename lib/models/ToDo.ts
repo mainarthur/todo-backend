@@ -1,8 +1,18 @@
 //@ts-check
-import { Schema, model } from "mongoose"
-import toDo from "./ToDo"
+import { Schema, model, Document } from "mongoose"
 
-const ToDoSchema = new Schema({
+export interface ToDoDocument extends Document {
+    userId: Schema.Types.ObjectId;
+    text: string;
+    done: boolean;
+    createdAt: Date;
+    lastUpdate: number;
+    position: number;
+    deleted: boolean;
+}
+
+
+const ToDoSchema = new Schema<ToDoDocument>({
     userId: {
         type: Schema.Types.ObjectId,
         required: true
@@ -44,12 +54,11 @@ ToDoSchema.methods.delete = function () {
     this.deleted = true
 }
 
-ToDoSchema.pre("save", async function(next) {
-    // @ts-ignore
+ToDoSchema.pre("save", async function() {
     this.lastUpdate = Date.now()
 })
 
-const ToDo = model("ToDo", ToDoSchema)
+const ToDo = model<ToDoDocument>("ToDo", ToDoSchema)
 
 
 export default ToDo

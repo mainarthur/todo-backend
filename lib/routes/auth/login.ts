@@ -1,11 +1,11 @@
 //@ts-check
 
-import bcrypt from "bcrypt"
-import jwt from "jsonwebtoken"
-import { isValidEmail, isValidPassword } from "../../utils.js"
-import User from "../../models/User.js"
-import dotenv from "dotenv"
-import RefreshToken from "../../models/RefreshToken.js"
+import * as  bcrypt from "bcrypt"
+import * as  jwt from "jsonwebtoken"
+import { isValidEmail, isValidPassword } from "../../utils"
+import User, { UserDocument } from "../../models/User"
+import * as dotenv from "dotenv"
+import RefreshToken from "../../models/RefreshToken"
 dotenv.config()
 
 const { JWT_SECRET } = process.env
@@ -42,7 +42,7 @@ export default async function login(ctx) {
     }
     
 
-    const user = await User.findOne({
+    const user:UserDocument = await User.findOne({
         email
     }).exec()
 

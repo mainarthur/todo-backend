@@ -1,5 +1,5 @@
 //@ts-check
-import Router from "koa-router"
+import * as  Router from "koa-router"
 import koaJwt from "../../middlewares/jwt"
 import getUser from "./getUser"
 

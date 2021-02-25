@@ -1,10 +1,10 @@
 //@ts-check
-import bcrypt from "bcrypt"
-import jwt from "jsonwebtoken"
-import { isValidEmail, isValidPassword, isValidName } from "../../utils.js"
-import User from "../../models/User.js"
-import dotenv from "dotenv"
-import RefreshToken from "../../models/RefreshToken.js"
+import * as  bcrypt from "bcrypt"
+import * as  jwt from "jsonwebtoken"
+import { isValidEmail, isValidPassword, isValidName } from "../../utils"
+import User from "../../models/User"
+import * as dotenv from "dotenv"
+import RefreshToken from "../../models/RefreshToken"
 dotenv.config()
 
 const { JWT_SECRET } = process.env
@@ -13,7 +13,7 @@ const { JWT_SECRET } = process.env
 /**
  * @param {import("koa").ParameterizedContext<any, import("koa-router").IRouterParamContext<any, {}>, any>} ctx
  */
-export default async function registerUser(ctx) {
+export default async function registerUser(ctx: import("koa").ParameterizedContext<any, import("koa-router").IRouterParamContext<any, {}>, any>): Promise<void> {
     const { request } = ctx
     const { body } = request
     

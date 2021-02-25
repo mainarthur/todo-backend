@@ -1,19 +1,20 @@
 //@ts-check
-import dotenv from "dotenv"
-import Koa from "koa"
-import bodyParser from "koa-bodyparser"
+import * as dotenv from "dotenv"
+import * as Koa from "koa"
+import * as bodyParser from "koa-bodyparser"
 import router from "./lib/routes"
 import logger from "./lib/middlewares/logger"
 import errorsMiddleware from "./lib/middlewares/errorsMiddleware"
-import cors from "@koa/cors"
-import mongoose from "mongoose"
+import * as cors from "@koa/cors"
+import * as mongoose from "mongoose"
+
 
 
 dotenv.config()
 
 const {
     HOSTNAME,
-    PORT,
+    PORT, 
     MONGODB_URI,
     NODE_ENV
 } = process.env

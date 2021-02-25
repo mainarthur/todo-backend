@@ -1,5 +1,5 @@
 //@ts-check
-import ToDo from "../../models/ToDo.js"
+import ToDo from "../../models/ToDo"
 
 /**
  * @param {import("koa").ParameterizedContext<any, import("koa-router").IRouterParamContext<any, {}>, any>} ctx

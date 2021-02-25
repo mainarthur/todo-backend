@@ -1,5 +1,5 @@
 //@ts-check
-import Router from "koa-router"
+import * as Router from "koa-router"
 import userRouter from "./user"
 import todoRouter from "./todo"
 import authRouter from "./auth"

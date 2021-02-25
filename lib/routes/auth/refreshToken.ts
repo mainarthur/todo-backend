@@ -1,7 +1,7 @@
 //@ts-check
 
-import jwt from "jsonwebtoken"
-import dotenv from "dotenv"
+import * as jwt from "jsonwebtoken"
+import * as dotenv from "dotenv"
 import RefreshToken from "../../models/RefreshToken"
 import User from "../../models/User"
 

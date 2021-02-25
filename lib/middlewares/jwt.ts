@@ -1,7 +1,6 @@
 //@ts-check
-import koaJwt from "koa-jwt"
-import dotenv from "dotenv"
-import jwt from "jsonwebtoken"
+import * as koaJwt from "koa-jwt"
+import * as dotenv from "dotenv"
 
 dotenv.config()
 

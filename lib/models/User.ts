@@ -1,8 +1,14 @@
 //@ts-check
-import { Schema, model } from "mongoose"
+import { Schema, model, Document } from "mongoose"
 import { isValidEmail, isValidName } from "../utils"
 
-const UserSchema = new Schema({
+export interface UserDocument extends Document {
+    name: string;
+    email: string;
+    passwordHash: string;
+}
+
+const UserSchema = new Schema<UserDocument>({
     name: {
         type: String,
         required: true,
@@ -26,6 +32,7 @@ const UserSchema = new Schema({
     }
 })
 
-const User = model("User", UserSchema)
+
+const User = model<UserDocument>("User", UserSchema)
 
 export default User

@@ -1,8 +1,16 @@
 //@ts-check
-import { Schema, model } from "mongoose"
-import crypto from "crypto"
+import { Schema, model, Document } from "mongoose"
+import * as crypto from "crypto" 
 
-const RefreshTokenSchema = new Schema({
+export interface RefreshTokenDocument extends Document {
+    userId: Schema.Types.ObjectId;
+    expiresAt: Number;
+    revoked: Boolean;
+    token: String;
+    isExpired(): boolean;
+}
+
+const RefreshTokenSchema = new Schema<RefreshTokenDocument>({
     userId: {
         type: Schema.Types.ObjectId,
         required: true
@@ -37,6 +45,6 @@ RefreshTokenSchema.static("generateRefreshToken", () => {
     return crypto.randomBytes(256).toString("hex")
 })
 
-const RefreshToken = model("RefreshToken", RefreshTokenSchema)
+const RefreshToken = model<RefreshTokenDocument>("RefreshToken", RefreshTokenSchema)
 
 export default RefreshToken
