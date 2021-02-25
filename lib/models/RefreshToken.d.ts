@@ -5,6 +5,7 @@ interface RefreshToken extends Document {
     expiresAt: Number;
     revoked: Boolean;
     token: String;
+    isExpired(): boolean;
 }
 
 declare let refreshToken: Model<RefreshToken>;
