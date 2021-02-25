@@ -1,7 +1,6 @@
-//@ts-check
 import * as Router from "koa-router"
-import userRouter from "./user"
 import todoRouter from "./todo"
+import userRouter from "./user"
 import authRouter from "./auth"
 
 const router = new Router()

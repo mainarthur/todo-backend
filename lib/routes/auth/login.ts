@@ -1,21 +1,23 @@
 //@ts-check
-
+import { ParameterizedContext } from "koa"
+import * as Router from "koa-router"
 import * as  bcrypt from "bcrypt"
 import * as  jwt from "jsonwebtoken"
 import { isValidEmail, isValidPassword } from "../../utils"
 import User, { UserDocument } from "../../models/User"
 import * as dotenv from "dotenv"
 import RefreshToken from "../../models/RefreshToken"
+import LoginRequest from "../requests/LoginRequest"
 dotenv.config()
 
 const { JWT_SECRET } = process.env
 
 /**
- * @param {import("koa").ParameterizedContext<any, import("koa-router").IRouterParamContext<any, {}>, any>} ctx
+ * @param {Koa.ParameterizedContext<any, Router.IRouterParamContext<any, {}>, any>} ctx
  */
-export default async function login(ctx) {
-    const { request } = ctx
-    const { body } = request
+export default async function login(ctx:ParameterizedContext<any, Router.IRouterParamContext<any, {}>, any>): Promise<void> {
+    const request = ctx.request
+    const body: LoginRequest = request.body
 
     let {
         email,
