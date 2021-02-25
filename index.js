@@ -8,7 +8,6 @@ import errorsMiddleware from "./lib/middlewares/errorsMiddleware"
 import cors from "@koa/cors"
 import mongoose from "mongoose"
 
-import User from "./lib/models/User"
 
 dotenv.config()
 

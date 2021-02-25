@@ -5,7 +5,7 @@ interface ToDo extends Document {
     text: string;
     done: boolean;
     createdAt: Date;
-    lastUpdate: Date;
+    lastUpdate: number;
     position: number;
     deleted: boolean;
 }
