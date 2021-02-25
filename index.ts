@@ -44,8 +44,8 @@ app.use(router.allowedMethods());
         console.log(err)
         process.exit(1)
     }
-    // @ts-ignore
-    app.listen(PORT, HOSTNAME, () => {
+
+    app.listen(+PORT, HOSTNAME, (): void => {
         console.log(`Server is running on ${HOSTNAME}:${PORT}`)
     })
 })()
