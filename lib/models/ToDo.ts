@@ -1,18 +1,18 @@
 //@ts-check
-import { Schema, model, Document } from "mongoose"
+import { Schema, model, Document, Model } from "mongoose"
 
 export interface ToDoDocument extends Document {
-    userId: Schema.Types.ObjectId;
-    text: string;
-    done: boolean;
-    createdAt: Date;
-    lastUpdate: number;
-    position: number;
-    deleted: boolean;
+    userId: Schema.Types.ObjectId
+    text: string
+    done: boolean
+    createdAt: Date
+    lastUpdate: number
+    position: number
+    deleted: boolean
 }
 
 
-const ToDoSchema = new Schema<ToDoDocument>({
+const ToDoSchema: Schema<ToDoDocument> = new Schema<ToDoDocument>({
     userId: {
         type: Schema.Types.ObjectId,
         required: true
@@ -21,11 +21,8 @@ const ToDoSchema = new Schema<ToDoDocument>({
         type: String,
         required: true,
         validate: {
-            /**
-            * @param {String} v
-            */
-            validator: (v) => v.trim().length > 0,
-            message: (props) => `"${props.value}" is invalid todo text value`
+            validator: (v: string): boolean => v.trim().length > 0,
+            message: (props: { value: string }): string => `"${props.value}" is invalid todo text value`
         }
     },
     done: {
@@ -50,15 +47,15 @@ const ToDoSchema = new Schema<ToDoDocument>({
     }
 })
 
-ToDoSchema.methods.delete = function () {
+ToDoSchema.methods.delete = function (): void {
     this.deleted = true
 }
 
-ToDoSchema.pre("save", async function() {
+ToDoSchema.pre("save", async function(): Promise<void> {
     this.lastUpdate = Date.now()
 })
 
-const ToDo = model<ToDoDocument>("ToDo", ToDoSchema)
+const ToDo: Model<ToDoDocument> = model<ToDoDocument>("ToDo", ToDoSchema)
 
 
 export default ToDo

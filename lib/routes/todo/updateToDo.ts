@@ -1,23 +1,39 @@
 //@ts-check
 
-import ToDo from "../../models/ToDo"
+import { ParameterizedContext, Request } from "koa"
+import { IRouterParamContext } from "koa-router"
+import ToDo, { ToDoDocument } from "../../models/ToDo"
+import { UserPayload } from "../auth/UserPayload"
+import { Schema } from "mongoose"
+import { UpdateToDoRequest } from "../requests/UpdateToDoRequest"
 
 /**
  * @param {import("koa").ParameterizedContext<any, import("koa-router").IRouterParamContext<any, {}>, any>} ctx
  */
-export default async function updateToDo(ctx) {
-    const { request, state: { payload } } = ctx
-    const { body } = request
-
-    const { id: userId } = payload
+export default async function updateToDo(ctx: ParameterizedContext<any, IRouterParamContext<any, {}>, any>): Promise<void> {
+    const { request, state: { payload } }: { request: Request, state: { payload: UserPayload } } = ctx
+    const { body }: { body?: UpdateToDoRequest } = request
+    const { id: userId }: { id: string } = payload
 
     const {
-        _id, text, done, position, lastUpdate, deleted
+        _id, 
+        text, 
+        done, 
+        position, 
+        lastUpdate, 
+        deleted
+    }: { 
+        _id: string, 
+        text: string, 
+        done: boolean, 
+        position: number, 
+        lastUpdate: number, 
+        deleted: boolean 
     } = body
 
-    const toDo = await ToDo.findOne({
-        userId,
-        _id
+    const toDo: ToDoDocument = await ToDo.findOne({
+        userId: new Schema.Types.ObjectId(userId),
+        _id: new Schema.Types.ObjectId(_id)
     }).exec()
 
     if(toDo) {

@@ -2,7 +2,7 @@ const emailRegexp: RegExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)
 const nameRegexp: RegExp = /^([a-z]{2,}|[а-яё]{2,})$/
 
 export function uuidv4():string {
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c: string) {
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c: string): string {
         let r: number = (Math.random() * 16) | 0
         let v: number = c == "x" ? r : (r & 0x3) | 0x8
         return v.toString(16)

@@ -7,9 +7,6 @@ import logger from "./lib/middlewares/logger"
 import errorsMiddleware from "./lib/middlewares/errorsMiddleware"
 import * as cors from "@koa/cors"
 import * as mongoose from "mongoose"
-
-
-
 dotenv.config()
 
 const {
@@ -17,9 +14,9 @@ const {
     PORT, 
     MONGODB_URI,
     NODE_ENV
-} = process.env
+}: { [key: string]: string} = process.env
 
-const app = new Koa()
+const app: Koa = new Koa()
 
 app.use(bodyParser({
     enableTypes: ["json"]
@@ -32,7 +29,7 @@ app.use(router.allowedMethods());
 
 
 
-(async () => {
+(async (): Promise<void> => {
     try {
         await mongoose.connect(MONGODB_URI, {
             autoIndex: NODE_ENV != "production",

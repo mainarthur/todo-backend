@@ -6,7 +6,7 @@ dotenv.config()
 
 const {
     JWT_SECRET
-} = process.env
+}: { [key: string]: string } = process.env
 
 
 export default koaJwt({

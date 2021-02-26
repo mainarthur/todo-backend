@@ -1,18 +1,22 @@
 //@ts-check
 
-import ToDo from "../../models/ToDo"
+import { ParameterizedContext, Request } from "koa"
+import { IRouterParamContext } from "koa-router"
+import ToDo, { ToDoDocument } from "../../models/ToDo"
+import { UserPayload } from "../auth/UserPayload"
+import { Schema } from "mongoose"
 
 /**
  * @param {import("koa").ParameterizedContext<any, import("koa-router").IRouterParamContext<any, {}>, any>} ctx
  */
-export default async function getToDo(ctx) {
-    const { state: { payload }, params: { id: _id } } = ctx
+export default async function getToDo(ctx: ParameterizedContext<any, IRouterParamContext<any, {}>, any>): Promise<void> {
+    const { state: { payload }, params: { id: _id } }: { state: { payload: UserPayload }, params: { id: string } } = ctx
+    const { id: userId }: { id: string } = payload
 
-    const { id: userId } = payload
 
-    const toDo = await ToDo.findOne({
+    const toDo: ToDoDocument = await ToDo.findOne({
         _id,
-        userId
+        userId: new Schema.Types.ObjectId(userId)
     }).exec()
 
     if(toDo) {

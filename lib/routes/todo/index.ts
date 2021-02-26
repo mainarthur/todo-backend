@@ -9,7 +9,7 @@ import addToDo from "./addToDo"
 import updateToDo from "./updateToDo"
 
 
-const router = new Router()
+const router: Router = new Router()
 
 
 router.use(koaJwt)

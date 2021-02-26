@@ -2,27 +2,29 @@
 import * as  bcrypt from "bcrypt"
 import * as  jwt from "jsonwebtoken"
 import { isValidEmail, isValidPassword, isValidName } from "../../utils"
-import User from "../../models/User"
+import User, { UserDocument } from "../../models/User"
 import * as dotenv from "dotenv"
-import RefreshToken from "../../models/RefreshToken"
+import RefreshToken, { RefreshTokenDocument } from "../../models/RefreshToken"
+import { ParameterizedContext, Request } from "koa"
+import { IRouterParamContext } from "koa-router"
+import RegisterRequest from "../requests/RegisterRequet"
 dotenv.config()
 
 const { JWT_SECRET } = process.env
 
 
 /**
- * @param {import("koa").ParameterizedContext<any, import("koa-router").IRouterParamContext<any, {}>, any>} ctx
+ * @param {ParameterizedContext<any, IRouterParamContext<any, {}>, any>} ctx
  */
-export default async function registerUser(ctx: import("koa").ParameterizedContext<any, import("koa-router").IRouterParamContext<any, {}>, any>): Promise<void> {
-    const { request } = ctx
-    const { body } = request
-    
+export default async function registerUser(ctx: ParameterizedContext<any, IRouterParamContext<any, {}>, any>): Promise<void> {
+    const { request }: { request: Request } = ctx
+    const { body }: { body?: RegisterRequest } = request
 
     let {
         email,
         name,
         password
-    } = body
+    } = body ?? { email: "", password: "", name: ""}
 
     email = email.trim()
     name = name.trim()
@@ -56,7 +58,7 @@ export default async function registerUser(ctx: import("koa").ParameterizedConte
         return ctx.throw(400, "User with this email already have registred")
     }
 
-    const user = new User({
+    const user: UserDocument = new User({
         name,
         email,
         passwordHash: bcrypt.hashSync(password, 10)
@@ -64,7 +66,7 @@ export default async function registerUser(ctx: import("koa").ParameterizedConte
 
     await user.save()
 
-    const token = new RefreshToken({
+    const token: RefreshTokenDocument = new RefreshToken({
         userId: user._id
     })
     await token.save()

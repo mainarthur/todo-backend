@@ -3,7 +3,7 @@ import todoRouter from "./todo"
 import userRouter from "./user"
 import authRouter from "./auth"
 
-const router = new Router()
+const router: Router = new Router()
 
 router.use("/user", userRouter.routes(), userRouter.allowedMethods())
 router.use("/todo", todoRouter.routes(), todoRouter.allowedMethods())

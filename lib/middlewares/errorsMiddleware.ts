@@ -10,41 +10,41 @@ async function errorsMiddleware(ctx: Koa.ParameterizedContext<Koa.DefaultState, 
     try {
         await next()
     } catch (err) {
-        const { status } = err
-        const errMessage = err.originalError ? err.originalError.message : err.message
+        if (err instanceof Koa.HttpError) {
+            const { status }: { status: number } = err
+            const errMessage: string = err.originalError ? err.originalError.message : err.message
 
-        console.log(status)
-        console.log(errMessage)
-
-        switch (status) {
-            case 401:
-                ctx.status = 401
-                ctx.body = {
-                    status: false,
-                    error: errMessage
-                }
-                ctx.set("X-Status-Reason", errMessage)
-                break;
-            case 400:
-                ctx.status = 400
-                ctx.body = {
-                    status: false,
-                    error: `Bad request: ${errMessage}`
-                }
-                ctx.set("X-Status-Reason", errMessage)
-                break
-            case 404:
-                ctx.status = 404
-                ctx.body = {
-                    status: false,
-                    error: `Not found`
-                }
-                ctx.set("X-Status-Reason", errMessage)
-                break
-            default:
-                throw err
+            switch (status) {
+                case 401:
+                    ctx.status = 401
+                    ctx.body = {
+                        status: false,
+                        error: errMessage
+                    }
+                    ctx.set("X-Status-Reason", errMessage)
+                    break;
+                case 400:
+                    ctx.status = 400
+                    ctx.body = {
+                        status: false,
+                        error: `Bad request: ${errMessage}`
+                    }
+                    ctx.set("X-Status-Reason", errMessage)
+                    break
+                case 404:
+                    ctx.status = 404
+                    ctx.body = {
+                        status: false,
+                        error: `Not found`
+                    }
+                    ctx.set("X-Status-Reason", errMessage)
+                    break
+                default:
+                    throw err
+            }
+        } else {
+            throw err
         }
-
     }
 }
 

@@ -1,29 +1,29 @@
 //@ts-check
-import { Schema, model, Document } from "mongoose"
+import { Schema, model, Document, Model } from "mongoose"
 import { isValidEmail, isValidName } from "../utils"
 
 export interface UserDocument extends Document {
-    name: string;
-    email: string;
-    passwordHash: string;
+    name: string
+    email: string
+    passwordHash: string
 }
 
-const UserSchema = new Schema<UserDocument>({
+const UserSchema: Schema<UserDocument> = new Schema<UserDocument>({
     name: {
         type: String,
         required: true,
         validator: {
-            validate: (v) => isValidName(v),
-            message: (props) => `"${props.value}" is invalid name value`
+            validate: (v: string): boolean => isValidName(v),
+            message: (props: { value: string }): string => `"${props.value}" is invalid name value`
         }
     },
     email: {
         type: String,
         required: true,
-        set: (v) => v.toLowerCase(),
+        set: (v: string) => v.toLowerCase(),
         validator: {
-            validate: (v) => isValidEmail(v),
-            message: (props) => `"${props.value}" is invalid email value`
+            validate: (v: string): boolean => isValidEmail(v),
+            message: (props: { value: string }): string => `"${props.value}" is invalid email value`
         }
     },
     passwordHash: {
@@ -33,6 +33,6 @@ const UserSchema = new Schema<UserDocument>({
 })
 
 
-const User = model<UserDocument>("User", UserSchema)
+const User: Model<UserDocument> = model<UserDocument>("User", UserSchema)
 
 export default User

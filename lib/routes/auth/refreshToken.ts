@@ -2,23 +2,28 @@
 
 import * as jwt from "jsonwebtoken"
 import * as dotenv from "dotenv"
-import RefreshToken from "../../models/RefreshToken"
+import RefreshToken, { RefreshTokenDocument } from "../../models/RefreshToken"
 import User from "../../models/User"
+import { ParameterizedContext, Request } from "koa"
+import * as Router from "koa-router"
+import RefreshTokenRequest from "../requests/RefreshTokenRequest"
 
 dotenv.config()
 
-const { JWT_SECRET } = process.env
+const {
+    JWT_SECRET
+} : { [key: string]: string }= process.env
 
 /**
- * @param {import("koa").ParameterizedContext<any, import("koa-router").IRouterParamContext<any, {}>, any>} ctx
+ * @param {ParameterizedContext<any, IRouterParamContext<any, {}>, any>} ctx
  */
-export default async function refreshToken(ctx) {
-    const { request } = ctx
-    const { body } = request
+export default async function refreshToken(ctx: ParameterizedContext<any, Router.IRouterParamContext<any, {}>, any>): Promise<void> {
+    const { request }: { request: Request } = ctx
+    const { body }: { body?: RefreshTokenRequest } = request
 
-    const { refresh_token } = body
+    const { refresh_token }: { refresh_token: string } = body ?? { refresh_token: "" }
 
-    const token = await RefreshToken.findOne({ token: refresh_token}).exec()
+    const token: RefreshTokenDocument = await RefreshToken.findOne({ token: refresh_token}).exec()
 
     if(!token) {
         return ctx.throw(401, "Refresh token not found")
@@ -34,7 +39,6 @@ export default async function refreshToken(ctx) {
         return ctx.throw(401, "User not found")
     }
 
-    // @ts-ignore
     token.token = RefreshToken.generateRefreshToken()
 
     await token.save()
