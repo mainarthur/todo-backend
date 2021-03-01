@@ -1,3 +1,5 @@
+import { ObjectId } from "mongoose";
+
 export interface UserPayload {
-    readonly id: string
+    readonly id: ObjectId
 }

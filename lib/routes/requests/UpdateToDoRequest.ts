@@ -1,5 +1,7 @@
+import { ObjectId } from "mongoose";
+
 export interface UpdateToDoRequest {
-    _id: string
+    _id: ObjectId
     userId: string
     text: string
     done: boolean

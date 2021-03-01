@@ -3,7 +3,7 @@ import { ParameterizedContext, Request } from "koa"
 import { IRouterParamContext } from "koa-router"
 import ToDo, { ToDoDocument } from "../../models/ToDo"
 import { NewToDoRequest } from "../requests/NewToDoRequest"
-import { Schema } from "mongoose"
+import { ObjectId, Types } from "mongoose"
 import { UserPayload } from "../auth/UserPayload"
 
 /**
@@ -13,7 +13,7 @@ export default async function addToDo(ctx: ParameterizedContext<any, IRouterPara
     const { request, state: { payload } }: { request: Request, state: { payload: UserPayload } } = ctx
     const { body }: { body?: NewToDoRequest } = request
 
-    const { id: userId }: { id: string } = payload
+    const { id: userId }: { id: ObjectId } = payload
     const { text } = body ?? { text: "" }
 
 
@@ -23,7 +23,7 @@ export default async function addToDo(ctx: ParameterizedContext<any, IRouterPara
             userId
         })
 
-        toDo.position = (await ToDo.findOne({ userId: new Schema.Types.ObjectId(userId) }).sort('-LAST_MOD').exec() ?? { position: 0 }).position + 1
+        toDo.position = (await ToDo.findOne({ userId }).sort('-LAST_MOD').exec() ?? { position: 0 }).position + 1
 
         await toDo.save()
 

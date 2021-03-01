@@ -4,13 +4,14 @@ import { ParameterizedContext, Request } from "koa"
 import { IRouterParamContext } from "koa-router"
 import { UserPayload } from "../auth/UserPayload"
 import User from "../../models/User"
+import { ObjectId } from "mongoose"
 
 /**
  * @param {import("koa").ParameterizedContext<any, import("koa-router").IRouterParamContext<any, {}>, any>} ctx
  */
 export default async function getUser(ctx: ParameterizedContext<any, IRouterParamContext<any, {}>, any>): Promise<void> {
     const { state: { payload } }: { request: Request, state: { payload: UserPayload } } = ctx
-    const { id: userId }: { id: string } = payload
+    const { id: userId }: { id: ObjectId } = payload
 
     const user = await User.findById(userId)
 

@@ -4,7 +4,7 @@ import { ParameterizedContext, Request } from "koa"
 import { IRouterParamContext } from "koa-router"
 import ToDo, { ToDoDocument } from "../../models/ToDo"
 import { UserPayload } from "../auth/UserPayload"
-import { Schema } from "mongoose"
+import { ObjectId, Schema } from "mongoose"
 import { UpdateToDoRequest } from "../requests/UpdateToDoRequest"
 
 /**
@@ -13,7 +13,7 @@ import { UpdateToDoRequest } from "../requests/UpdateToDoRequest"
 export default async function updateToDo(ctx: ParameterizedContext<any, IRouterParamContext<any, {}>, any>): Promise<void> {
     const { request, state: { payload } }: { request: Request, state: { payload: UserPayload } } = ctx
     const { body }: { body?: UpdateToDoRequest } = request
-    const { id: userId }: { id: string } = payload
+    const { id: userId }: { id: ObjectId } = payload
 
     const {
         _id, 
@@ -23,7 +23,7 @@ export default async function updateToDo(ctx: ParameterizedContext<any, IRouterP
         lastUpdate, 
         deleted
     }: { 
-        _id: string, 
+        _id: ObjectId, 
         text: string, 
         done: boolean, 
         position: number, 
@@ -32,8 +32,8 @@ export default async function updateToDo(ctx: ParameterizedContext<any, IRouterP
     } = body
 
     const toDo: ToDoDocument = await ToDo.findOne({
-        userId: new Schema.Types.ObjectId(userId),
-        _id: new Schema.Types.ObjectId(_id)
+        userId,
+        _id
     }).exec()
 
     if(toDo) {
