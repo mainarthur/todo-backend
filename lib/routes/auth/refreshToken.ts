@@ -26,17 +26,17 @@ export default async function refreshToken(ctx: ParameterizedContext<any, Router
     const token: RefreshTokenDocument = await RefreshToken.findOne({ token: refresh_token}).exec()
 
     if(!token) {
-        return ctx.throw(401, "Refresh token not found")
+        return ctx.throw(400, "Refresh token not found")
     }
 
     if(token.isExpired() || token.revoked) {
-        return ctx.throw(401, "Refresh token is not valid")
+        return ctx.throw(400, "Refresh token is not valid")
     }
 
     const user = await User.findOne({ _id: token.userId }).exec()
 
     if(!user) {
-        return ctx.throw(401, "User not found")
+        return ctx.throw(400, "User not found")
     }
 
     token.token = RefreshToken.generateRefreshToken()
