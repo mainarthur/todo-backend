@@ -20,15 +20,11 @@ export default async function updateToDo(ctx: ParameterizedContext<any, IRouterP
         text, 
         done, 
         position, 
-        lastUpdate, 
-        deleted
     }: { 
         _id: ObjectId, 
         text: string, 
         done: boolean, 
         position: number, 
-        lastUpdate: number, 
-        deleted: boolean 
     } = body
 
     const toDo: ToDoDocument = await ToDo.findOne({
@@ -45,17 +41,10 @@ export default async function updateToDo(ctx: ParameterizedContext<any, IRouterP
             toDo.done = done
         }
 
-        if(deleted != null) {
-            toDo.deleted = deleted
-        }
-
         if(position) {
             toDo.position = position
         }
 
-        if(lastUpdate) {
-            toDo.lastUpdate = lastUpdate
-        }
 
         await toDo.save()
 
