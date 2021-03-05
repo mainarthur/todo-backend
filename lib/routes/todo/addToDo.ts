@@ -23,7 +23,7 @@ export default async function addToDo(ctx: ParameterizedContext<any, IRouterPara
             userId
         })
 
-        toDo.position = (await ToDo.findOne({ userId }).sort('-LAST_MOD').exec() ?? { position: 0 }).position + 1
+        toDo.position = (await ToDo.findOne({ userId }).sort({position: -1}).exec() ?? { position: 0 }).position + 1
 
         await toDo.save()
 
