@@ -7,13 +7,19 @@ import logger from "./lib/middlewares/logger"
 import errorsMiddleware from "./lib/middlewares/errorsMiddleware"
 import * as cors from "@koa/cors"
 import * as mongoose from "mongoose"
-dotenv.config()
+
+const {
+    NODE_ENV
+} = process.env
+
+if(NODE_ENV !== 'production') {
+    dotenv.config()
+}
 
 const {
     HOSTNAME,
     PORT, 
     MONGODB_URI,
-    NODE_ENV
 }: { [key: string]: string} = process.env
 
 const app: Koa = new Koa()
@@ -43,6 +49,6 @@ app.use(router.allowedMethods());
     }
 
     app.listen(+PORT, HOSTNAME, (): void => {
-        console.log(`Server is running on ${HOSTNAME}:${PORT}`)
+        console.log(`[${NODE_ENV}]Server is running on ${HOSTNAME}:${PORT}`)
     })
 })()

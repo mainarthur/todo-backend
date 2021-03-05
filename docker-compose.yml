@@ -1,5 +1,13 @@
 version: '2'
 services:
+  app:
+    container_name: todo-backend
+    restart: always
+    build: .
+    ports: 
+      - "3001:30001"
+    links: 
+      -
   mongo:
     image: mongo
   node:
