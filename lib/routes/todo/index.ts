@@ -7,6 +7,7 @@ import getAllToDos from "./getAllToDos"
 import deleteToDo from "./deleteToDo"
 import addToDo from "./addToDo"
 import updateToDo from "./updateToDo"
+import deleteAllToDos from './deleteAllToDos'
 
 
 const router: Router = new Router()
@@ -17,6 +18,7 @@ router.get("/", getAllToDos)
 router.get("/:id", getToDo)
 router.post("/", addToDo)
 router.delete("/:id", deleteToDo)
+router.delete("/", deleteAllToDos)
 router.patch("/", updateToDo)
 
 

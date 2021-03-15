@@ -4,7 +4,7 @@ import { ParameterizedContext, Request } from "koa"
 import { IRouterParamContext } from "koa-router"
 import ToDo, { ToDoDocument } from "../../models/ToDo"
 import { UserPayload } from "../auth/UserPayload"
-import { ObjectId, Schema } from "mongoose"
+import { ObjectId } from "mongoose"
 
 /**
  * @param {import("koa").ParameterizedContext<any, import("koa-router").IRouterParamContext<any, {}>, any>} ctx
