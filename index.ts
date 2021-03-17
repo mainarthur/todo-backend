@@ -45,25 +45,20 @@ io.use((socket: SecureSocket, next) => {
             }
         }
     } = socket
-    console.log(authorization)
     if(authorization) {
         if(authorization.indexOf('Bearer ') !== 0) {
-            console.log(1)
             next(new Error('Authorization Header is required'))
         } else {
             const token = authorization.substring('Bearer '.length)
-            console.log(token)
             try {
                 const decodedPayload: any = verify(token, JWT_SECRET)
                 socket.payload = decodedPayload
                 next(null)
             } catch (err) {
                 next(err)
-                console.log(err)
             } 
         }
     } else {
-        console.log(2)
         next(new Error('Authorization Header is required'))
     }
 })
