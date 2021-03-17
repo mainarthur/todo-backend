@@ -9,6 +9,8 @@ router.use("/user", userRouter.routes(), userRouter.allowedMethods())
 router.use("/todo", todoRouter.routes(), todoRouter.allowedMethods())
 router.use("/auth", authRouter.routes(), authRouter.allowedMethods())
 
-
+router.options('/socket.io', async (ctx) => {
+  ctx.status = 200
+})
 
 export default router
