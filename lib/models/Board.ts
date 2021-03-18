@@ -3,6 +3,7 @@ import { Schema, model, Document, Model, Types } from "mongoose"
 
 export interface BoardDocument extends Document {
   users: Types.ObjectId[]
+  name: string
   createdAt: Date
   lastUpdate: number
   position: number
@@ -14,6 +15,10 @@ export interface BoardDocument extends Document {
 const BoardSchema: Schema<BoardDocument> = new Schema<BoardDocument>({
   users: {
     type: [Schema.Types.ObjectId],
+    required: true
+  },
+  name: {
+    type: String,
     required: true
   },
   createdAt: {
