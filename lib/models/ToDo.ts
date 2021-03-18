@@ -2,6 +2,7 @@
 import { Schema, model, Document, Model } from "mongoose"
 
 export interface ToDoDocument extends Document {
+    boardId: Schema.Types.ObjectId
     userId: Schema.Types.ObjectId
     text: string
     done: boolean
@@ -14,6 +15,10 @@ export interface ToDoDocument extends Document {
 
 const ToDoSchema: Schema<ToDoDocument> = new Schema<ToDoDocument>({
     userId: {
+        type: Schema.Types.ObjectId,
+        required: true
+    },
+    boardId: {
         type: Schema.Types.ObjectId,
         required: true
     },

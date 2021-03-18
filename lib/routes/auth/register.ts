@@ -2,12 +2,13 @@
 import * as  bcrypt from "bcrypt"
 import * as  jwt from "jsonwebtoken"
 import { isValidEmail, isValidPassword, isValidName } from "../../utils"
-import User, { UserDocument } from "../../models/User"
+import User from "../../models/User"
 import * as dotenv from "dotenv"
-import RefreshToken, { RefreshTokenDocument } from "../../models/RefreshToken"
-import { ParameterizedContext, Request } from "koa"
+import RefreshToken from "../../models/RefreshToken"
+import { ParameterizedContext } from "koa"
 import { IRouterParamContext } from "koa-router"
 import RegisterRequest from "../requests/RegisterRequet"
+import Board from '../../models/Board'
 dotenv.config()
 
 const { JWT_SECRET } = process.env
@@ -17,14 +18,13 @@ const { JWT_SECRET } = process.env
  * @param {ParameterizedContext<any, IRouterParamContext<any, {}>, any>} ctx
  */
 export default async function registerUser(ctx: ParameterizedContext<any, IRouterParamContext<any, {}>, any>): Promise<void> {
-    const { request }: { request: Request } = ctx
-    const { body }: { body?: RegisterRequest } = request
+    const { request: { body } } = ctx
 
     let {
         email,
         name,
         password
-    } = body ?? { email: "", password: "", name: ""}
+    }: RegisterRequest = body ?? { email: "", password: "", name: "" }
 
     email = email.trim()
     name = name.trim()
@@ -58,20 +58,25 @@ export default async function registerUser(ctx: ParameterizedContext<any, IRoute
         return ctx.throw(400, "User with this email already have registred")
     }
 
-    const user: UserDocument = new User({
+    const user = new User({
         name,
         email,
         passwordHash: bcrypt.hashSync(password, 10)
     })
 
-    await user.save()
+    const defaultBoard = new Board({
+        users: [user.id]
+    })
 
-    const token: RefreshTokenDocument = new RefreshToken({
+    await user.save()
+    await defaultBoard.save()
+
+    const token = new RefreshToken({
         userId: user._id
     })
     await token.save()
 
-    
+
     ctx.status = 200
     ctx.body = {
         status: true,

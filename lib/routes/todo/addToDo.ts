@@ -1,26 +1,27 @@
 //@ts-check
 import { ParameterizedContext, Request } from "koa"
 import { IRouterParamContext } from "koa-router"
+
 import ToDo, { ToDoDocument } from "../../models/ToDo"
-import { NewToDoRequest } from "../requests/NewToDoRequest"
-import { ObjectId, Types } from "mongoose"
 import { UserPayload } from "../auth/UserPayload"
+
+import { NewToDoRequest } from "../requests/NewToDoRequest"
 
 /**
  * @param {import("koa").ParameterizedContext<any, import("koa-router").IRouterParamContext<any, {}>, any>} ctx
  */
 export default async function addToDo(ctx: ParameterizedContext<any, IRouterParamContext<any, {}>, any>): Promise<void> {
-    const { request, state: { payload } }: { request: Request, state: { payload: UserPayload } } = ctx
-    const { body }: { body?: NewToDoRequest } = request
+    const { request: { body }, state: { payload } } = ctx
 
-    const { id: userId }: { id: ObjectId } = payload
-    const { text } = body ?? { text: "" }
+    const { id: userId }: UserPayload = payload
+    const { text, boardId }: NewToDoRequest = body ?? { text: '', boardId: '' }
 
 
     if (typeof text === "string" && text?.trim() !== "") {
         const toDo: ToDoDocument = new ToDo({
             text,
-            userId
+            userId,
+            boardId
         })
 
         toDo.position = (await ToDo.findOne({ userId }).sort({position: -1}).exec() ?? { position: 0 }).position + 1

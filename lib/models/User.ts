@@ -6,6 +6,7 @@ export interface UserDocument extends Document {
     name: string
     email: string
     passwordHash: string
+    readonly roomName: string
 }
 
 const UserSchema: Schema<UserDocument> = new Schema<UserDocument>({
@@ -32,6 +33,9 @@ const UserSchema: Schema<UserDocument> = new Schema<UserDocument>({
     }
 })
 
+UserSchema.virtual('roomName').get(function() {
+    return `user-${this.id}`
+})
 
 const User: Model<UserDocument> = model<UserDocument>("User", UserSchema)
 

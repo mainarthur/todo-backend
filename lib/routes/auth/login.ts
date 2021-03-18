@@ -1,13 +1,19 @@
 //@ts-check
-import { Request, ParameterizedContext } from "koa"
+import { ParameterizedContext } from "koa"
 import { IRouterParamContext } from "koa-router"
+
+import * as dotenv from "dotenv"
 import * as  bcrypt from "bcrypt"
 import * as  jwt from "jsonwebtoken"
+
+import User from "../../models/User"
+import RefreshToken from "../../models/RefreshToken"
+
+import LoginRequest from '../requests/RegisterRequet'
+
 import { isValidEmail, isValidPassword } from "../../utils"
-import User, { UserDocument } from "../../models/User"
-import * as dotenv from "dotenv"
-import RefreshToken, { RefreshTokenDocument } from "../../models/RefreshToken"
-import LoginRequest from "../requests/LoginRequest"
+
+
 dotenv.config()
 
 const {
@@ -18,13 +24,12 @@ const {
  * @param {Koa.ParameterizedContext<any, Router.IRouterParamContext<any, {}>, any>} ctx
  */
 export default async function login(ctx: ParameterizedContext<any, IRouterParamContext<any, {}>, any>): Promise<void> {
-    const { request }: { request: Request } = ctx
-    const { body }: { body?: LoginRequest } = request
+    const { request: { body } } = ctx
 
     let {
         email,
         password
-    } = body ?? { email: "", password: "" }
+    }: LoginRequest = body ?? { email: "", password: "" }
 
     email = email.trim().toLowerCase()
     password = password.trim()
@@ -46,7 +51,7 @@ export default async function login(ctx: ParameterizedContext<any, IRouterParamC
     }
 
 
-    const user: UserDocument = await User.findOne({
+    const user = await User.findOne({
         email
     }).exec()
 
@@ -59,7 +64,7 @@ export default async function login(ctx: ParameterizedContext<any, IRouterParamC
         return ctx.throw(400, "Email or password is incorrect")
     }
 
-    const token: RefreshTokenDocument = new RefreshToken({ userId: user._id })
+    const token = new RefreshToken({ userId: user._id })
     await token.save()
 
 

@@ -4,7 +4,7 @@ import login from "./login"
 import register from "./register"
 import refreshToken from "./refreshToken"
 
-const router: Router = new Router()
+const router = new Router()
 
 router.post("/register", register)
 router.post("/login", login)

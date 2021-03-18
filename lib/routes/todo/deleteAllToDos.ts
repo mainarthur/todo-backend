@@ -5,15 +5,14 @@ import { IRouterParamContext } from "koa-router"
 import ToDo, { ToDoDocument } from "../../models/ToDo"
 import { UserPayload } from "../auth/UserPayload"
 import { ObjectId } from "mongoose"
-import { DeleteToDos } from '../requests/DeleteToDos'
+import { DeleteManyToDos } from '../requests/DeleteManyToDos'
 
 /**
  * @param {import("koa").ParameterizedContext<any, import("koa-router").IRouterParamContext<any, {}>, any>} ctx
  */
 export default async function deleteAllToDos(ctx: ParameterizedContext<any, IRouterParamContext<any, {}>, any>): Promise<void> {
     const { state: { payload }, request }: { state: { payload: UserPayload}, request: Request } = ctx
-    const { id: userId }: { id: ObjectId } = payload as UserPayload
-    const { body }: { body?: DeleteToDos } = request
+    const { body: {todos, boardId} }: { body?: DeleteManyToDos } = request
 
     const lastUpdate = Date.now()
 
@@ -23,9 +22,9 @@ export default async function deleteAllToDos(ctx: ParameterizedContext<any, IRou
         nModified: number;
     } = await ToDo.updateMany({
         _id: {
-            $in: body.todos
+            $in: todos
         },
-        userId
+        boardId
     }, {
         $set: {
             deleted: true,

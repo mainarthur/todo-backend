@@ -1,5 +1,6 @@
 import { ObjectId } from "mongoose";
 
-export interface DeleteToDos {
+export interface DeleteManyToDos {
   todos: Array<ObjectId>
+  boardId: ObjectId
 }

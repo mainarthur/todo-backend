@@ -1,13 +1,14 @@
 //@ts-check
+import { ParameterizedContext, Request } from "koa"
+import * as Router from "koa-router"
 
 import * as jwt from "jsonwebtoken"
 import * as dotenv from "dotenv"
-import RefreshToken, { RefreshTokenDocument } from "../../models/RefreshToken"
-import User from "../../models/User"
-import { ParameterizedContext, Request } from "koa"
-import * as Router from "koa-router"
-import RefreshTokenRequest from "../requests/RefreshTokenRequest"
 
+import RefreshToken from "../../models/RefreshToken"
+import User from "../../models/User"
+
+import RefreshTokenRequest from "../requests/RefreshTokenRequest"
 dotenv.config()
 
 const {
@@ -18,12 +19,11 @@ const {
  * @param {ParameterizedContext<any, IRouterParamContext<any, {}>, any>} ctx
  */
 export default async function refreshToken(ctx: ParameterizedContext<any, Router.IRouterParamContext<any, {}>, any>): Promise<void> {
-    const { request }: { request: Request } = ctx
-    const { body }: { body?: RefreshTokenRequest } = request
+    const { request: { body } } = ctx
 
-    const { refresh_token }: { refresh_token: string } = body ?? { refresh_token: "" }
+    const { refresh_token }: RefreshTokenRequest = body ?? { refresh_token: "" }
 
-    const token: RefreshTokenDocument = await RefreshToken.findOne({ token: refresh_token}).exec()
+    const token = await RefreshToken.findOne({ token: refresh_token}).exec()
 
     if(!token) {
         return ctx.throw(400, "Refresh token not found")
