@@ -1,6 +1,6 @@
-import { ObjectId } from "mongoose";
+import { Types } from "mongoose"
 
 export interface DeleteToDo {
-  toDoId: ObjectId
-  boardId: ObjectId
+  toDoId: Types.ObjectId
+  boardId: Types.ObjectId
 }

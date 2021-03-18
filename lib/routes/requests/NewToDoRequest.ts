@@ -1,6 +1,6 @@
-import { ObjectId } from 'mongoose'
+import { Types } from 'mongoose'
 
 export interface NewToDoRequest {
-    text: string
-    boardId: ObjectId
+  text: string
+  boardId: Types.ObjectId
 }

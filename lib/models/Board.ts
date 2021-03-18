@@ -1,8 +1,8 @@
 //@ts-check
-import { Schema, model, Document, Model } from "mongoose"
+import { Schema, model, Document, Model, Types } from "mongoose"
 
 export interface BoardDocument extends Document {
-  users: Schema.Types.ObjectId[]
+  users: Types.ObjectId[]
   createdAt: Date
   lastUpdate: number
   position: number
@@ -34,7 +34,7 @@ const BoardSchema: Schema<BoardDocument> = new Schema<BoardDocument>({
   }
 })
 
-BoardSchema.virtual('roomName').get(function() {
+BoardSchema.virtual('roomName').get(function () {
   return `board-${this.id}`
 })
 

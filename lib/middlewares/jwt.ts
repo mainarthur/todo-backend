@@ -5,11 +5,11 @@ import * as dotenv from "dotenv"
 dotenv.config()
 
 const {
-    JWT_SECRET
+  JWT_SECRET
 }: { [key: string]: string } = process.env
 
 
 export default koaJwt({
-    secret: JWT_SECRET,
-    key: "payload"
+  secret: JWT_SECRET,
+  key: "payload"
 })

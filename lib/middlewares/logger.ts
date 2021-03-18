@@ -7,16 +7,16 @@ import { DefaultContext, DefaultState, Next, ParameterizedContext, Request } fro
 
 
 async function logger(ctx: ParameterizedContext<DefaultState, DefaultContext, any>, next: Next): Promise<void> {
-    const { URL, method, request }: { URL: URL, method: string, request: Request } = ctx
-    const { rawBody }: { rawBody: string } = request
+  const { URL, method, request } = ctx
+  const { rawBody } = request
 
-    console.log(`${method} ${URL.toString()}`)
+  console.log(`${method} ${URL.toString()}`)
 
-    if (rawBody) {
-        console.log(`Request body: ${rawBody}`)
-    }
+  if (rawBody) {
+    console.log(`Request body: ${rawBody}`)
+  }
 
-    await next()
+  await next()
 }
 
 export default logger

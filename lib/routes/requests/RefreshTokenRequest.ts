@@ -1,3 +1,3 @@
 export default interface RefreshTokenRequest {
-    refresh_token: string
-} 
+  refresh_token: string
+}
