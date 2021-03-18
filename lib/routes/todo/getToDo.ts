@@ -2,30 +2,40 @@
 
 import { ParameterizedContext, Request } from "koa"
 import { IRouterParamContext } from "koa-router"
-import ToDo, { ToDoDocument } from "../../models/ToDo"
+import { Types } from 'mongoose'
+import Board from '../../models/Board'
+import ToDo from "../../models/ToDo"
 import { UserPayload } from "../auth/UserPayload"
-import { ObjectId, Schema } from "mongoose"
 
 /**
  * @param {import("koa").ParameterizedContext<any, import("koa-router").IRouterParamContext<any, {}>, any>} ctx
  */
 export default async function getToDo(ctx: ParameterizedContext<any, IRouterParamContext<any, {}>, any>): Promise<void> {
-    const { state: { payload }, params: { id: _id } }: { state: { payload: UserPayload }, params: { id: string } } = ctx
-    const { id: userId }: { id: ObjectId } = payload
+  const { state: { payload }, URL, params: { id: _id } } = ctx
+  const { id: userId }: UserPayload = payload
 
+  const boardId: string = URL.searchParams.get('boardId')
 
-    const toDo: ToDoDocument = await ToDo.findOne({
-        _id,
-        userId
+  const board = await Board.findOne({
+    _id: boardId,
+    users: userId
+  })
+  if (board) {
+    const toDo = await ToDo.findOne({
+      _id,
+      boardId: Types.ObjectId(boardId)
     }).exec()
 
-    if(toDo) {
-        ctx.status = 200
-        ctx.body = {
-            status: true,
-            result: toDo
-        }
+    if (toDo) {
+      ctx.status = 200
+      ctx.body = {
+        status: true,
+        result: toDo
+      }
     } else {
-        ctx.throw(400, "ToDo not found")
+      ctx.throw(400, "ToDo not found")
     }
+  } else {
+    ctx.throw(400, "Board not found")
+  }
 }
