@@ -65,7 +65,8 @@ export default async function registerUser(ctx: ParameterizedContext<any, IRoute
   })
 
   const defaultBoard = new Board({
-    users: [user.id]
+    users: [user.id],
+    name: 'To-Do'
   })
 
   await user.save()
