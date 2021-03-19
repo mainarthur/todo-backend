@@ -20,6 +20,6 @@ export default async function getBoards(ctx: ParameterizedContext<any, IRouterPa
   ctx.status = 200
   ctx.body = {
     status: true,
-    result: boards
+    results: boards
   }
 }
