@@ -9,7 +9,7 @@ const router: Router = new Router()
 router.use("/user", userRouter.routes(), userRouter.allowedMethods())
 router.use("/todo", todoRouter.routes(), todoRouter.allowedMethods())
 router.use("/auth", authRouter.routes(), authRouter.allowedMethods())
-router.use('/boards', boardsRouter.routes(), boardsRouter.allowedMethods())
+router.use('/board', boardsRouter.routes(), boardsRouter.allowedMethods())
 
 router.options('/socket.io', async (ctx) => {
   ctx.status = 200
