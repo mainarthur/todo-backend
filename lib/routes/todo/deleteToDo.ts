@@ -4,7 +4,7 @@ import { ParameterizedContext, Request } from "koa"
 import { IRouterParamContext } from "koa-router"
 import ToDo, { ToDoDocument } from "../../models/ToDo"
 import { ObjectId } from "mongoose"
-import { DeleteToDo } from '../requests/DeleteToDo'
+import { DeleteToDo } from '../typings/DeleteToDo'
 import Board from '../../models/Board'
 import { UserPayload } from '../auth/UserPayload'
 

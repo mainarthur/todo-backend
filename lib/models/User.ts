@@ -31,6 +31,14 @@ const UserSchema: Schema<UserDocument> = new Schema<UserDocument>({
     type: String,
     required: true
   }
+}, {
+  toJSON: {
+    transform: (_doc, ret) => {
+      ret.id = ret._id
+      delete ret._id
+      delete ret.__v
+    }
+  }
 })
 
 UserSchema.virtual('roomName').get(function () {

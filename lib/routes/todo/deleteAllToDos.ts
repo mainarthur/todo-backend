@@ -7,7 +7,7 @@ import Board from '../../models/Board'
 import ToDo from "../../models/ToDo"
 import { UserPayload } from '../auth/UserPayload'
 
-import { DeleteManyToDos } from '../requests/DeleteManyToDos'
+import { DeleteManyToDos } from '../typings/DeleteManyToDos'
 
 /**
  * @param {import("koa").ParameterizedContext<any, import("koa-router").IRouterParamContext<any, {}>, any>} ctx
@@ -18,15 +18,15 @@ export default async function deleteAllToDos(ctx: ParameterizedContext<any, IRou
   const { todos, boardId }: DeleteManyToDos = body
   const { id: userId }: UserPayload = payload
 
-  
+
   const board = await Board.findOne({
     _id: boardId,
     users: userId
   })
-  
-  if(board) {
+
+  if (board) {
     const lastUpdate = Date.now()
-    
+
     const toDos: {
       ok: number
       n: number
@@ -42,7 +42,7 @@ export default async function deleteAllToDos(ctx: ParameterizedContext<any, IRou
         lastUpdate
       }
     }).exec()
-  
+
     if (toDos.nModified > 0) {
       ctx.status = 200
       ctx.body = {
@@ -53,7 +53,7 @@ export default async function deleteAllToDos(ctx: ParameterizedContext<any, IRou
       ctx.throw(400, "ToDos not found")
     }
   } else {
-    ctx.throw(400, "Board not found")   
+    ctx.throw(400, "Board not found")
   }
 
 }

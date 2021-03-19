@@ -7,7 +7,7 @@ import * as dotenv from "dotenv"
 import RefreshToken from "../../models/RefreshToken"
 import { ParameterizedContext } from "koa"
 import { IRouterParamContext } from "koa-router"
-import RegisterRequest from "../requests/RegisterRequet"
+import RegisterRequest from "../typings/RegisterRequet"
 import Board from '../../models/Board'
 dotenv.config()
 

@@ -5,9 +5,9 @@ import Board from '../../models/Board'
 
 import ToDo, { ToDoDocument } from "../../models/ToDo"
 import { UserPayload } from "../auth/UserPayload"
-import { NewBoardRequest } from '../requests/NewBoardRequest'
+import { NewBoardRequest } from '../typings/NewBoardRequest'
 
-import { NewToDoRequest } from "../requests/NewToDoRequest"
+import { NewToDoRequest } from "../typings/NewToDoRequest"
 
 /**
  * @param {import("koa").ParameterizedContext<any, import("koa-router").IRouterParamContext<any, {}>, any>} ctx

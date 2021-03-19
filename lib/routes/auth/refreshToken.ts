@@ -8,7 +8,7 @@ import * as dotenv from "dotenv"
 import RefreshToken from "../../models/RefreshToken"
 import User from "../../models/User"
 
-import RefreshTokenRequest from "../requests/RefreshTokenRequest"
+import RefreshTokenRequest from "../typings/RefreshTokenRequest"
 dotenv.config()
 
 const {

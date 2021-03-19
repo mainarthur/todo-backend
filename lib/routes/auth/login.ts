@@ -9,7 +9,7 @@ import * as  jwt from "jsonwebtoken"
 import User from "../../models/User"
 import RefreshToken from "../../models/RefreshToken"
 
-import LoginRequest from '../requests/RegisterRequet'
+import LoginRequest from '../typings/RegisterRequet'
 
 import { isValidEmail, isValidPassword } from "../../utils"
 

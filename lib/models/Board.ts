@@ -31,11 +31,19 @@ const BoardSchema: Schema<BoardDocument> = new Schema<BoardDocument>({
   },
   position: {
     type: Number,
-    default: -1
+    default: 0
   },
   deleted: {
     type: Boolean,
     default: false
+  }
+}, {
+  toJSON: {
+    transform: (_doc, ret) => {
+      ret.id = ret._id
+      delete ret._id
+      delete ret.__v
+    }
   }
 })
 
