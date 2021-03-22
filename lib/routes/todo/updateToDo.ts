@@ -16,7 +16,7 @@ export default async function updateToDo(ctx: ParameterizedContext<any, IRouterP
   const { id: userId }: UserPayload = payload
 
   const {
-    _id,
+    id,
     text,
     done,
     position,
@@ -31,7 +31,7 @@ export default async function updateToDo(ctx: ParameterizedContext<any, IRouterP
   if (board) {
     const toDo: ToDoDocument = await ToDo.findOne({
       boardId,
-      _id
+      _id: id
     }).exec()
 
     if (toDo) {
