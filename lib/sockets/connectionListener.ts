@@ -1,4 +1,5 @@
-import Board from '../models/Board'
+import { Types } from 'mongoose'
+import Board, { BoardDocument } from '../models/Board'
 import { ToDoDocument } from '../models/ToDo'
 import User from '../models/User'
 import { DeleteManyToDos } from '../routes/typings/DeleteManyToDos'
@@ -21,6 +22,18 @@ const connectionListener = async (socket: SecureSocket) => {
   const rooms = [userRoomName, ...boards.map((board) => board.roomName)]
 
   socket.join(rooms)
+
+  socket.on('new-board', (board: BoardDocument) => {
+    socket.join(Board.getBoardName(board.id))
+    console.log(board)
+    socket.to(userRoomName).emit('new-board', board)
+  })
+
+  socket.on('join-board', async (boardId: Types.ObjectId) => {
+    if (await Board.findOne({ _id: boardId, users: userId })) {
+      socket.join(Board.getBoardName(boardId))
+    }
+  })
 
   socket.on('update-todo', (toDo: ToDoDocument) => {
     socket.to(Board.getBoardName(toDo.boardId)).emit('update-todo', toDo)
