@@ -1,5 +1,7 @@
 import Board from '../models/Board'
+import { ToDoDocument } from '../models/ToDo'
 import User from '../models/User'
+import { DeleteManyToDos } from '../routes/typings/DeleteManyToDos'
 import SecureSocket from './SecureSocket'
 
 const intervals: { [key: string]: NodeJS.Timeout } = {}
@@ -20,8 +22,15 @@ const connectionListener = async (socket: SecureSocket) => {
 
   socket.join(rooms)
 
-
-
+  socket.on('update-todo', (toDo: ToDoDocument) => {
+    socket.to(Board.getBoardName(toDo.boardId)).emit('update-todo', toDo)
+  })
+  socket.on('new-todo', (toDo: ToDoDocument) => {
+    socket.to(Board.getBoardName(toDo.boardId)).emit('new-todo', toDo)
+  })
+  socket.on('delete-todos', (body: DeleteManyToDos) => {
+    socket.to(Board.getBoardName(body.boardId)).emit('delete-todos', body)
+  })
   socket.on('disconnect', () => {
     console.log('disconnected')
   })

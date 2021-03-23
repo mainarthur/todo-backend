@@ -4,6 +4,8 @@ import { ParameterizedContext, Request } from "koa"
 import { IRouterParamContext } from "koa-router"
 import Board from '../../models/Board'
 import ToDo, { ToDoDocument } from "../../models/ToDo"
+import User from '../../models/User'
+import { io } from '../../sockets'
 import { UserPayload } from "../auth/UserPayload"
 import { UpdateToDoRequest } from "../typings/UpdateToDoRequest"
 

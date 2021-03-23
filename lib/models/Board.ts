@@ -11,6 +11,10 @@ export interface BoardDocument extends Document {
   readonly roomName: string
 }
 
+interface BoardModel extends Model<BoardDocument> {
+  getBoardName?: (id: Types.ObjectId) => string
+}
+
 
 const BoardSchema: Schema<BoardDocument> = new Schema<BoardDocument>({
   users: {
@@ -59,7 +63,9 @@ BoardSchema.pre("save", async function (): Promise<void> {
   this.lastUpdate = Date.now()
 })
 
-const Board: Model<BoardDocument> = model<BoardDocument>("Board", BoardSchema)
+BoardSchema.statics.getBoardName = (id) => `board-${id}`
+
+const Board: BoardModel = model<BoardDocument>("Board", BoardSchema)
 
 
 export default Board

@@ -1,5 +1,5 @@
 //@ts-check
-import { Schema, model, Document, Model } from "mongoose"
+import { Schema, model, Document, Model, Types } from "mongoose"
 import { isValidEmail, isValidName } from "../utils"
 
 export interface UserDocument extends Document {
@@ -7,6 +7,10 @@ export interface UserDocument extends Document {
   email: string
   passwordHash: string
   readonly roomName: string
+}
+
+interface UserModel extends Model<UserDocument> {
+  getRoomName?: (id: Types.ObjectId) => string
 }
 
 const UserSchema: Schema<UserDocument> = new Schema<UserDocument>({
@@ -45,6 +49,8 @@ UserSchema.virtual('roomName').get(function () {
   return `user-${this.id}`
 })
 
-const User: Model<UserDocument> = model<UserDocument>("User", UserSchema)
+UserSchema.statics.getRoomName = (id) => `user-${id}`
+
+const User: UserModel = model<UserDocument>("User", UserSchema)
 
 export default User
