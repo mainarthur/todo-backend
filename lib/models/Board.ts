@@ -9,6 +9,7 @@ export interface BoardDocument extends Document {
   position: number
   deleted: boolean
   readonly roomName: string
+  invitedUsersEmails: string[]
 }
 
 interface BoardModel extends Model<BoardDocument> {
@@ -40,6 +41,10 @@ const BoardSchema: Schema<BoardDocument> = new Schema<BoardDocument>({
   deleted: {
     type: Boolean,
     default: false
+  },
+  invidedUsersEmails: {
+    type: [String],
+    default: []
   }
 }, {
   toJSON: {

@@ -7,6 +7,7 @@ export interface UserDocument extends Document {
   email: string
   passwordHash: string
   readonly roomName: string
+  avatarColor: string
 }
 
 interface UserModel extends Model<UserDocument> {
@@ -34,6 +35,10 @@ const UserSchema: Schema<UserDocument> = new Schema<UserDocument>({
   passwordHash: {
     type: String,
     required: true
+  },
+  avatarColor: {
+    type: String,
+    default: () => `#${Math.random().toString(16).substr(2, 6)}`
   }
 }, {
   toJSON: {

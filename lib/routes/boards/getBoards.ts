@@ -16,10 +16,10 @@ export default async function getBoards(ctx: ParameterizedContext<any, IRouterPa
   const from: number = parseInt(URL.searchParams.get("from"))
 
   if (isNaN(from)) {
+
     const boards = await Board.find({
       users: userId
     }).exec()
-
 
     ctx.status = 200
     ctx.body = {
@@ -31,6 +31,7 @@ export default async function getBoards(ctx: ParameterizedContext<any, IRouterPa
     ctx.body = {
       status: true,
       results: await Board.find({
+        users: userId,
         lastUpdate: {
           $gt: from
         }

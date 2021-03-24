@@ -10,10 +10,13 @@ import { ObjectId } from "mongoose"
  * @param {import("koa").ParameterizedContext<any, import("koa-router").IRouterParamContext<any, {}>, any>} ctx
  */
 export default async function getUser(ctx: ParameterizedContext<any, IRouterParamContext<any, {}>, any>): Promise<void> {
-    const { state: { payload } } = ctx
+    const { state: { payload }, URL } = ctx
     const { id: userId }: UserPayload = payload
 
-    const user = await User.findById(userId)
+    const id = URL.searchParams.get('id') || userId
+
+    const user = await User.findById(id)
+
 
     if (user) {
         const { passwordHash, __v, ...result } = user.toJSON()
