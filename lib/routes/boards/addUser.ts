@@ -27,7 +27,8 @@ export default async function addUser(ctx: ParameterizedContext<any, IRouterPara
   })
 
   if (board && user) {
-    board.users.push(userId)
+    if (!board.users.find(userId => userId.toHexString() === user.id))
+      board.users.push(user.id)
 
     await board.save()
 

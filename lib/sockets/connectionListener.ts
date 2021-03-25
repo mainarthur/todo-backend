@@ -35,9 +35,21 @@ const connectionListener = async (socket: SecureSocket) => {
     }
   })
 
+  socket.on('add-user', async (board: BoardDocument) => {
+    if (await Board.findOne({ _id: board.id, users: userId })) {
+      socket.to(board.users.map(userId => User.getRoomName(userId))).emit('new-board', board)
+    }
+  })
+
   socket.on('join-board', async (boardId: Types.ObjectId) => {
     if (await Board.findOne({ _id: boardId, users: userId })) {
       socket.join(Board.getBoardName(boardId))
+    }
+  })
+
+  socket.on('update-board', async (board: BoardDocument) => {
+    if (await Board.findOne({ _id: board.id, users: userId })) {
+      socket.to(Board.getBoardName(board.id)).emit('update-board', board)
     }
   })
 
