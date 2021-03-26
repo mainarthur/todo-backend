@@ -12,7 +12,6 @@ if(NODE_ENV !== 'production') {
 }
 
 const {
-  HOSTNAME,
   PORT, 
   MONGODB_URI,
 }: { [key: string]: string} = process.env
@@ -29,7 +28,7 @@ void (async (): Promise<void> => {
         console.log(err)
         process.exit(1)
     }
-    httpServer.listen(+PORT, HOSTNAME, (): void => {
-        console.log(`[${NODE_ENV || 'development'}]Server is running on ${HOSTNAME}:${PORT}`)
+    httpServer.listen(+PORT, (): void => {
+        console.log(`[${NODE_ENV || 'development'}]Server is running on ${PORT}`)
     })
 })()
