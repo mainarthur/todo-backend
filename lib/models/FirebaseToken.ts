@@ -1,6 +1,5 @@
 //@ts-check
 import { Schema, model, Document, Model, Types } from "mongoose"
-import * as crypto from "crypto"
 
 
 export interface FirebaseTokenDocument extends Document {
