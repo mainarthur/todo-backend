@@ -7,6 +7,9 @@ import ToDo, { ToDoDocument } from "../../models/ToDo"
 import { UserPayload } from "../auth/UserPayload"
 import UpdateBoard from '../typings/UpdateBoard'
 import { UpdateToDoRequest } from "../typings/UpdateToDoRequest"
+import * as admin from 'firebase-admin'
+import FirebaseToken from '../../models/FirebaseToken'
+
 
 /**
  * @param {import("koa").ParameterizedContext<any, import("koa-router").IRouterParamContext<any, {}>, any>} ctx
@@ -32,6 +35,25 @@ export default async function updateBoard(ctx: ParameterizedContext<any, IRouter
     }
 
     await board.save()
+
+    const firebaseTokens = await FirebaseToken.find({
+      userId,
+    })
+    for (let i = 0; i < firebaseTokens.length; i++) {
+      const { token } = firebaseTokens[i]
+
+      try {
+        await admin.messaging().sendToDevice(token, {
+          notification: {
+            title: 'Board updated',
+            body: `Board "${board.name}" is updated`
+          }
+        })
+      } catch (err) {
+        console.log(err)
+        await firebaseTokens[i].deleteOne()
+      }
+    }
 
     ctx.status = 200
     ctx.body = {

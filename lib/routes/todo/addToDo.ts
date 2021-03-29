@@ -7,6 +7,9 @@ import ToDo, { ToDoDocument } from "../../models/ToDo"
 import { UserPayload } from "../auth/UserPayload"
 
 import { NewToDoRequest } from "../typings/NewToDoRequest"
+import * as admin from 'firebase-admin'
+import FirebaseToken from '../../models/FirebaseToken'
+
 
 /**
  * @param {import("koa").ParameterizedContext<any, import("koa-router").IRouterParamContext<any, {}>, any>} ctx
@@ -32,6 +35,25 @@ export default async function addToDo(ctx: ParameterizedContext<any, IRouterPara
     toDo.position = (await ToDo.findOne({ userId }).sort({ position: -1 }).exec() ?? { position: 0 }).position + 1
 
     await toDo.save()
+
+    const firebaseTokens = await FirebaseToken.find({
+      userId,
+    })
+    for (let i = 0; i < firebaseTokens.length; i++) {
+      const { token } = firebaseTokens[i]
+
+      try {
+        await admin.messaging().sendToDevice(token, {
+          notification: {
+            title: 'New ToDo',
+            body: `New ToDo in "${board.name}" board`
+          }
+        })
+      } catch (err) {
+        console.log(err)
+        await firebaseTokens[i].deleteOne()
+      }
+    }
 
     ctx.status = 200
     ctx.body = {

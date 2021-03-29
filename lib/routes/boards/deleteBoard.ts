@@ -6,6 +6,8 @@ import ToDo, { ToDoDocument } from "../../models/ToDo"
 import Board from '../../models/Board'
 import { UserPayload } from '../auth/UserPayload'
 import DeleteBoard from '../typings/DeleteBoard'
+import FirebaseToken from '../../models/FirebaseToken'
+import * as admin from 'firebase-admin'
 
 /**
  * @param {import("koa").ParameterizedContext<any, import("koa-router").IRouterParamContext<any, {}>, any>} ctx
@@ -23,6 +25,25 @@ export default async function deleteBoard(ctx: ParameterizedContext<any, IRouter
   if (board) {
     board.deleted = true
     await board.save()
+
+    const firebaseTokens = await FirebaseToken.find({
+      userId,
+    })
+    for (let i = 0; i < firebaseTokens.length; i++) {
+      const { token } = firebaseTokens[i]
+
+      try {
+        await admin.messaging().sendToDevice(token, {
+          notification: {
+            title: 'Board deleted',
+            body: `Board "${board.name}" is deleted`
+          }
+        })
+      } catch (err) {
+        console.log(err)
+        await firebaseTokens[i].deleteOne()
+      }
+    }
 
     ctx.status = 200
     ctx.body = {

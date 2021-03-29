@@ -2,13 +2,10 @@
 import { ParameterizedContext, Request } from "koa"
 import { IRouterParamContext } from "koa-router"
 import Board from '../../models/Board'
-
-import ToDo, { ToDoDocument } from "../../models/ToDo"
+import FirebaseToken from '../../models/FirebaseToken'
 import { UserPayload } from "../auth/UserPayload"
 import { NewBoardRequest } from '../typings/NewBoardRequest'
-
-import { NewToDoRequest } from "../typings/NewToDoRequest"
-
+import * as admin from 'firebase-admin'
 /**
  * @param {import("koa").ParameterizedContext<any, import("koa-router").IRouterParamContext<any, {}>, any>} ctx
  */
@@ -30,6 +27,24 @@ export default async function createBoard(ctx: ParameterizedContext<any, IRouter
 
     await board.save()
 
+    const firebaseTokens = await FirebaseToken.find({
+      userId,
+    })
+    for (let i = 0; i < firebaseTokens.length; i++) {
+      const { token } = firebaseTokens[i]
+
+      try {
+        await admin.messaging().sendToDevice(token, {
+          notification: {
+            title: 'New board',
+            body: `New board: "${name}"`
+          }
+        })
+      } catch (err) {
+        console.log(err)
+        await firebaseTokens[i].deleteOne()
+      }
+    }
     ctx.status = 200
     ctx.body = {
       status: true,

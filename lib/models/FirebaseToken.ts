@@ -4,7 +4,7 @@ import { Schema, model, Document, Model, Types } from "mongoose"
 
 export interface FirebaseTokenDocument extends Document {
   userId: Types.ObjectId
-  token: String
+  token: string
 }
 
 export interface FirebaseTokenModel extends Model<FirebaseTokenDocument> {
