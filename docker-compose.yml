@@ -2,6 +2,7 @@ version: '3.7'
 services:
   app:
     container_name: todo-backend
+    build: .
     restart: always
     build: .
     env_file:
@@ -9,6 +10,9 @@ services:
     ports:
       - '3001:3001'
   mongo:
-    image: mongo
-  node:
-    image: node
+    image: mongo:4.4.4
+    volumes: 
+      - 'mongodb:/data/db'
+
+volumes: 
+  mongodb:
